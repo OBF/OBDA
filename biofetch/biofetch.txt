@@ -1,8 +1,7 @@
-# $Id: biofetch.txt,v 1.1 2002/02/25 09:30:35 heikki Exp $
+# $Id: biofetch.txt,v 1.2 2002/02/25 09:32:53 heikki Exp $
 
 BioFetch - Light weight universal translator
 ============================================
-Spec version 0.6
 
 
 This is a document for a standard Web interface to retrieve entries
@@ -170,27 +169,3 @@ URL is:
 
     http://bioruby.org/cgi-bin/biofetch.rb
 
-
-
-
-
-
-
-v. 0.1  Heikki Lehvaslaiho	Sun Jan 27 00:03:08 GMT 2002
-
-v. 0.2  Heikki Lehvaslaiho	Sun Jan 27 19:11:29 GMT 2002
-         			Sun Jan 27 12:11:29 MST 2002
-
-v. 0.3  Heikki Lehvaslaiho	Sun Jan 27 21:05:51 GMT 2002
-	- standard error messages
-
-v. 0.4  Heikki Lehvaslaiho	Mon Jan 28 16:16:11 GMT 2002
-        - minor typos fixed
-
-v. 0.5  Heikki Lehvaslaiho	Mon Feb  4 09:51:24 GMT 2002
-        - typo ebi.ebi.ac.uk -> www.ebi.ac.uk
-        - added Katayama's biofetch.rb server
-
-v. 0.6  Heikki Lehvaslaiho	Mon Feb  4 13:43:42 GMT 2002
-        - changed Katayama's email address
-        - removed a duplicated error message
