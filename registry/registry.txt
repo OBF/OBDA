@@ -1,5 +1,4 @@
-$Id: registry.txt,v 1.2 2003/02/18 04:26:44 lstein Exp $
-$Version$
+$Id: registry.txt,v 1.3 2003/02/18 23:27:45 lstein Exp $
 
 OBDA REGISTRY FILE FORMAT, VERSION 1.00
 ---------------------------------------
@@ -76,8 +75,9 @@ The file remainder is a simple stanza format which goes:
   tag=value
 
 Each stanza starts with a symbolic database service name enclosed in
-square brackets.  The remainder of the stanza is followed by a series
-of tag=value pairs that configure access to the service.
+square brackets.  Service names are case insensitive.  The remainder
+of the stanza is followed by a series of tag=value pairs that
+configure access to the service.
 
 Database-name stanzas can be repeated, in which case the client should
 try each service in turn from top to bottom.
@@ -95,9 +95,7 @@ one of:
 
   flat
   biofetch
-  bsane-corba
   biosql
-  xembl
 
 "flat" is used to fetch sequences from local flat files that have been
 indexed using BerkeleyDB or binary search indexing.
@@ -106,14 +104,8 @@ indexed using BerkeleyDB or binary search indexing.
 restrictions on the use of these databases, this is recommended only
 for lightweight applications.
 
-"bsane-corba" is used to fetch sequences from BSANE/CORBA services.
-To use this service you will need to download the bioperl-corba
-distribution.
-
 "biosql" fetches sequences from BioSQL databases.  To use this module
 you will need to install the bioperl-db distribution.
-
-"xembl" uses the EBI's XEMBL web service to fetch sequences.
 
 The Location Tag
 ----------------
@@ -156,9 +148,3 @@ several.
 		passwd     <passwd>
 		biodbname  <biodatabase name>
 
- xembl          location   The SOAP endpoint.  Currently the only
-                           known compatible service is 
-			   http://www.ebi.ac.uk:80/cgi-bin/xembl/XEMBL-SOAP.pl
-
- bsane-corba    location   <I don't know>
-                <others?>
