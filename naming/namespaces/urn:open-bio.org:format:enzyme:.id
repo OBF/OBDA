@@ -1,0 +1,12 @@
+The Enzyme database entry format. The enzyme database can be downloaded from
+the ebi at:
+
+  ftp://ftp.ebi.ac.uk/pub/databases/enzyme/
+
+For an example of a file in this format, see:
+
+  ftp://ftp.ebi.ac.uk/pub/databases/enzyme/enzyme.dat
+
+The format is described more fully in 
+
+  ftp://ftp.ebi.ac.uk/pub/databases/enzyme/enzyser.txt

@@ -4,12 +4,17 @@ OBDA URN FORMATS, VERSION 0.1
 This is a document that specifies how to construct uniform resource names (URNs)
 for common concepts and entities used within the OBDA and other OBF projects.
 
-A list of the names of specific concepts or entities will be provided in a
-seperate document.
+A list of the names of specific concepts or entities will be provided in
+seperate documents, as described in "DOCUMENTING IDENTIFIERS" below.
 
 Any process by which a URN may be resolved to either some
 other URI, or to a concrete data item (such as an object or a file) is outside
-the scope of this document.
+the scope of this document. It is expected that standard APIs, such as JNDI
+be used. We strongly discourage the generation of APIs specific to resolving
+OBDA URNs to resources unless there is no available API that can be re-used.
+In the case that there is no such API, we strongly reccomend that a
+general-purpose URN resolving API is developed, and that the resolution of
+OBDA URNs is used as a test-case and first use-case.
 
 Identifiers for entities such as embl sequence records are addressed by the
 LSID specification, and therefore fall outside the scope of this document.
@@ -31,8 +36,8 @@ resolved by the AlphabetManager class from the string literal "DNA".
 Between projects, there is a need to communicate shared concepts, regardless
 of the fact that different projects may represent these in different ways. For
 example, each project has parsers for the Embl file format. It would be
-beneficial if one project could store a persistent identifier that flags a resource as
-being in the Embl format, and another project could understand this.
+beneficial if one project could store a persistent identifier that flags a
+resource as being in the Embl format, and another project could understand this.
 Applications such as flat-file indexing would be enhanced by this capability.
 
 The main purpose of this documentation is to define some rules for constructing
@@ -58,15 +63,15 @@ RELATIONSHIPS BETWEEN URNS ARE NOT MODELLED BY THIS SPECIFICATION
 No attept in this document is made to define relationships between URNs. For
 example, if there was a URN for the concept of a biological Alphabet and there
 was a URN for the alphabet DNA, this specification will not address the
-question of any mechanism that would allow the DNA URN to be used to discover
-that it represents a resource of a type compattible with the Alphabet URN.
-It is expected that external documents, such as RDF, or external naming and
-directory technologies, such as LDAP can be adapted to perform this
+question of any programatic mechanism that would allow the DNA URN to be used to
+discover that it represents a resource of a type compattible with the Alphabet
+URN. It is expected that external documents, such as RDF, or external naming and
+directory technologies, such as LDAP can be adapted to provide this
 functionality.
 
 
-THIS DOCUMENT DOES NOT SPECIFY HOW TO  DECIDE ON URNS OR URN NAMESPACES
------------------------------------------------------------------------
+THIS DOCUMENT DOES NOT SPECIFY HOW TO DECIDE ON URNS OR URN NAMESPACES
+----------------------------------------------------------------------
 
 OBF URNs are for the benefit of the complete OBF community. As such, it is
 expected that the community as a whole, or some subsection thereof will decide
@@ -143,10 +148,10 @@ and
 the identifiers 'bar' and 'baz' can be compared to one another, because they are
 both scoped within the namespace 'foo'.
 
-Namespace identifiers starting with a period ('.') should be considered to be
-potentialy reserved. It is not good practice to use any identifier starting
+Namespace identifiers starting with a period ('.') are reserved.
+It is not good practice to use any identifier starting
 with a period. In particular, the namespaces .ns and .id are reserved for
-internal use.
+internal use for documentation.
 
 STRUCTURE OF OBDA URN COMPONENT IDENTIFIERS
 -------------------------------------------
@@ -163,6 +168,10 @@ used for CGI scripts. The '?' character should be used to seperate the first
 part of the identifier from the parameterization. Perameters should be encoded
 as name=value pairs, and individual pairs should be seperated by the semi-colon
 (';') character.
+
+[open question: it has been pointed out by Brian King that this introduces
+some potential problems with comparing URNs that have the same query parameters
+in different orders. Should we allow this syntax at all?]
 
 The common case of a URN component that encodes version information should be
 represented as an identifer of the following form:
@@ -198,6 +207,11 @@ has the prefix:
 The presence of the former URN does not imply that the latter one exists or is
 meaningful. It also does not imply that the former does not exist or is not
 meaningful.
+
+URNs with trailing colons represent a resource that describes all URNs
+starting with that pattern. For example, urn:open-bio.org:foo: should reslove
+to a resource that identifies information about all urns under the foo
+namespace.
 
 
 DOCUMENTING IDENTIFIERS
@@ -236,8 +250,8 @@ corresponding ns entry be added for it's immediate namespace.
 
 The proceeding paragraphs are things that should happen. If the files are not
 present, this does not invalidate the use of the URN as an OBDA URN, but it
-does reduce the associated benefit as it is no longer possible for a developer
-to find out how the URN should be used.
+does reduce the associated benefit as it is no longer possible for a user to
+find out what the URN names.
 
 
 TYPE IDENTIFIERS AND NAMESPACES
@@ -258,8 +272,18 @@ namespace:
 
 This is not a formal requirement of the specification. This convention should
 in no way be relied upon by code that acts upon OBDA URNs. It is meerly
-provided as a way for our URN space to become self-organising.
+provided as a way for our URN space to become self-organising. Namespaces that
+follow this convention should state this clearly in the associated .ns
+documentation. It is recomended that namespaces that do not follow this
+convention should state this fact in their documentation.
 
+Namespaces that document that all child names must represent entities of a
+particular type may also state that any child not of this type is not a valid
+OBDA URN. While this specification does not provide a mechanism to prove
+the type of identifiers, it is very strongly reccomended that this restriction
+be honoured. If at some time in the future a further reccomendation is formed
+that allows the types of URNs to be proved, this strong reccomendation will
+be strengthened to become a requirement.
 
 SOME EXAMPLE OBF URNS
 ---------------------
@@ -329,6 +353,13 @@ example URNs above, we repeat that this document does not attempt to define a
 formal way of specifying these relationships. This is wholely outside the
 scope of this document.
 
+LOOSE ENDS
+----------
+
+We may need to provide a formal deffinition of the different components of our
+URNs as BNF or regular expressions, or even as an explicit list of allowed and
+diss-allowed characters. This may aid implementers to write parsers and
+formatters for them.
 
 AUTHORS
 -------
