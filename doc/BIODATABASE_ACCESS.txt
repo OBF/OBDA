@@ -1,0 +1,218 @@
+$Id: BIODATABASE_ACCESS.txt,v 1.1 2003/02/20 20:50:50 lstein Exp $
+
+USING THE BIODIRECTORY REGISTRY SYSTEM TO ACCESS SEQUENCE DATABASES
+
+The BioDirectory Registry is a system for specifying how BioPerl
+programs find sequence databases.  It uses a site-wide configuration
+file, known as the registry, which defines one or more databases and
+the access methods to use to access them.  
+
+For instance, you might start out by accessing sequence data over the
+web, and later decide to install a locally mirrored copy of GenBank.
+By changing one line in the registry file, all
+Bio{Perl,Java,Python,Ruby} applications will start using the mirrored
+local copy automatically - no source code changes are necessary.
+
+INSTALLING THE REGISTRY FILE
+
+The registry file should be named seqdatabase.ini.  By default, it
+should be installed in one of the following locations:
+
+   $HOME/.bioinformatics/seqdatabase.ini
+   /etc/bioinformatics/seqdatabase.ini
+
+The Bio{Perl,Java,Python,Ruby} registry-handling code will initialize
+itself from the registry file located in the home directory first,
+followed by the system-wide default in /etc.
+
+If no local registry file cannot be found, the registry-handling code
+will take its configuration from the file located at this URL:
+
+   http://www.open-bio.org/registry/seqdatabase.ini
+
+MODIFYING THE SEARCH PATH
+
+The registry file search path can be modified by setting the
+environment variable OBDA_SEARCH_PATH.  This variable is a "+"
+delimited string of files and URLs, for example:
+
+ OBDA_SEARCH_PATH=/home/lstein/seqdatabase.ini+http://foo.org/seqdatabase.ini
+
+The search order proceeds from left to right.  The first file or URL
+that is found ends the search.
+
+==============================================================================
+
+FORMAT OF THE REGISTRY FILE
+
+The registry file is a simple text file, as shown in the following
+example:
+
+----------------- example starts --------------
+ VERSION=1.00
+
+ [embl]
+ protocol=biofetch
+ location=http://www.ebi.ac.uk/cgi-bin/dbfetch
+ dbname=embl
+
+ [swissprot]
+ protocol=biofetch
+ location=http://www.ebi.ac.uk/cgi-bin/dbfetch
+ dbname=swall
+------------------ example ends ---------------
+
+The first line is the registry format version number in the format
+VERSION=X.XX.  The current version is 1.00.
+
+The file remainder is a simple stanza format which goes:
+
+  [database-name]
+  tag=value
+  tag=value
+
+  [database-name]
+  tag=value
+  tag=value
+
+Each stanza starts with a symbolic database service name enclosed in
+square brackets.  Service names are case insensitive.  The remainder
+of the stanza is followed by a series of tag=value pairs that
+configure access to the service.
+
+Database-name stanzas can be repeated, in which case the client should
+try each service in turn from top to bottom.
+
+The options under each stanza must have two non-optional tag=value lines being
+
+  protocol=<protocol-type>
+  location=<location-string>
+
+The Protocol Tag
+----------------
+
+The protocol tag species what access mode to use.  Currently it can be
+one of:
+
+  flat
+  biofetch
+  biosql
+
+"flat" is used to fetch sequences from local flat files that have been
+indexed using BerkeleyDB or binary search indexing.
+
+"biofetch" is used to fetch sequences from web-based databses.  Due to
+restrictions on the use of these databases, this is recommended only
+for lightweight applications.
+
+"biosql" fetches sequences from BioSQL databases.  To use this module
+you will need to install the bioperl-db distribution.
+
+The Location Tag
+----------------
+
+The location tag tells the bioperl sequence fetching code where the
+database is located.  Its interpretation depends on the protocol
+chosen.  For example, it might be a directory on the local file
+system, or a remote URL.
+
+Other Tags
+----------
+
+Any number of additional tag values are allowed.  The number and
+nature of these tags depends on the access protocol selected.  Some
+protocols require no additional tags, whereas others will require
+several.
+
+ Protocol       Tag       Description
+ --------       ---       -----------
+
+ flat           location  Directory in which the index is stored.
+                          The "config.dat" file generated during
+                          indexing must be found in this location.
+
+                dbname    Name of database.
+
+ biofetch       location   Base URL for the web service.  Currently
+                           the only compatible biofetch service is 
+			   http://www.ebi.ac.uk/cgi-bin/dbfetch
+
+                dbname     Name of the database.  Currently recognized
+                           values are "embl" (sequence and protein),
+                           "swall" (SwissProt + TREMBL), and "refseq"
+                           (NCBI RefSeq entries).
+
+ biosql		location   <host:port>
+		dbname     <database_name>
+		driver     mysql|postgres|oracle|sybase|sqlserver|access|csv|informix|odbc|rdb
+		user       <username>
+		passwd     <passwd>
+		biodbname  <biodatabase name>
+
+==============================================================================
+
+INSTALLING LOCAL DATABASES
+
+If you are using the biofetch protocol, you're all set.  You can start
+reading sequences immediately.  For the flat and biosql protocols, you
+will need to create and initialize local databases.  See the following
+documentation on how to do this:
+
+   flat protocol:    CREATING_LOCAL_INDEXED_DATABASES.txt
+   biosql protocol:  CREATING_BIOSQL_DATABASES.txt
+
+
+==============================================================================
+
+WRITING CODE TO USE THE REGISTRY
+
+
+BIOPERL
+
+In BioPerl, sequence retrieval from the registry is encapsulated by
+the Bio::DB:Registry class.  The following runnable snippet is a
+simplification of the code in 'scripts/DB/biogetseq':
+
+  my $id = 'J0223';
+  my $dbname = 'embl';
+  my $format = 'fasta';
+
+  my $registry = new Bio::DB::Registry();
+  my $db = $registry->get_database($dbname);
+  my $seq = $db->get_Seq_by_id($id);
+  my $out = new Bio::SeqIO('-format' => $format);
+  $out->write_seq($seq);
+
+
+
+BIOPYTHON
+
+Biopython provides access to the BioDirectory Registry through the
+Bio.seqdb object.  The following runnable snippet will download a
+sequence and print it out:
+
+  import Bio
+  from Bio import SeqRecord
+
+  id = "ab050095"
+  dbname = "embl"
+  format = "fasta"
+
+  db = Bio.seqdb[dbname]
+  seqhandle = db[id]
+  SeqRecord.io.convert(seqhandle, output_format=format)
+
+BIOJAVA
+
+<to come>
+
+
+BIORUBY
+
+<to come>
+
+
+$Log: BIODATABASE_ACCESS.txt,v $
+Revision 1.1  2003/02/20 20:50:50  lstein
+Added standard documentation for accessing databases and creating
+local databases.
