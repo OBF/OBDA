@@ -1,3 +1,0 @@
-A namespace for OBDA URNs that define formats. All URNs within this namespace
-must be of the type urn:open-bio.org:type:format. Any URN in this namespace that
-is not of that type is not a valid OBDA URN.

@@ -1,5 +1,0 @@
-The OBDA URN that identifies the concept of 'type'. In a given language, this
-may map to the types of data structures, or objects. Alternativel, it may
-map to a particular set of keys being present in a map, or a term in an
-ontology. This is not important. The important thing is that we have unique
-identifiers for common types that all projects use and interact with.

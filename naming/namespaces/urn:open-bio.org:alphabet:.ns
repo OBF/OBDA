@@ -1,3 +1,0 @@
-A namespace within which to store alphabet identifiers. Alphabets should
-represent URNs that represent objects of the type identified by
-urn:open-bio.org:type:alphabet, and any useage outside of this is not supported.
