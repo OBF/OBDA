@@ -1,0 +1,56 @@
+
+
+   Open Bio Sequence Database Access.
+
+
+ The Open Bio group of open source bioinformatics projects, being
+BioPython, BioJava, BioRuby and BioPerl have agreed on a
+cross-language and cross-platform specification for accessing
+biological sequence databases. This specification has been
+incorporated into the four projects and provides bioinformatics
+application developers seemless access to databases. The specification
+allows:
+
+  (a) a global "fallback" access to databases, to allow applications 
+installed with no bioinformatics support on site to retrieve sequences
+
+  (b) the ability to configure locally (to a system) or personally (to a user)
+access to databases, allowing customisations of the database set up and 
+on-site specific databases to be accessed
+
+  (c) A number of implementations of datastores/data fetching protocols which 
+work portably between all three main projects (Bioperl, Biojava and Biopython)
+including flat file indexes, simple web services, more complex, SOAP based
+databases and relational schema databases. These implementations are accurately
+specified and each project has provided read access to these implementations
+and at least one project has write or build systems for them.
+
+  All implementations are based on working systems in at least one of
+the projects and are expected to be stable and robust.
+ 
+
+  The rest of this document is broken into parts being
+
+  (a) the definition of the registry, being the configuration of where the 
+database services exist
+
+  (b) the definition of each of the implementations being
+
+    - flat file indexing (two implementations are defined)
+
+    - simple web fetching (biofetch)
+
+    - CORBA, BSANE compliant access
+
+    - SOAP based access, based on XEMBL
+
+    - and relational database, based on biosql access
+
+
+It is hoped that other projects can adopt these access methods and therefore
+system administrators and bioinformatics database maintainers on site can
+simplify the management of databases.
+
+
+
+

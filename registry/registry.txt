@@ -1,0 +1,47 @@
+
+
+  The BioDirectory Registry is a simple system for specifying where
+to find services which provide sequence databases. A client should look at 
+the following places in order to find this file:
+
+   $HOME/.bioinformatics/seqdatabase.ini
+   /etc/bioinformatics/seqdatabase.ini
+   http://www.open-bio.org/registry/seqdatabase.ini
+
+
+  The file is a simple stanza format which goes
+
+  [database-name]
+  tag=value
+  tag=value
+
+  [database-name]
+  tag=value
+  tag=value
+
+where each stanza starts with the declaration of the database being in square 
+brackets and following that one line tag=value tag value formats.
+
+Database-name stanzas can be repeated, in which case the client should
+try each service in turn (starting at the first one).
+
+The options under each stanza must have two non-optional tag=value lines being
+
+
+  protocol=<protocol-type>
+  location=<location-string>
+
+
+protocol currently can be one of
+
+  index-berkeleydb
+  index-flat
+  biofetch
+  bsane-corba
+  biosql
+  xembl
+
+location is a string specific to the protocol. Any number of
+additional tag values are allowed in the stanza which should be passed
+to the appropiate constructor of the protocol to interpret. Some
+protocols might insist on other mandatory tags

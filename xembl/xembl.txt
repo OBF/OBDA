@@ -1,0 +1,42 @@
+XEMBL
+=====
+The main developer of this service: Jean-Jack M. Riethoven
+<pow@ebi.ac.uk>.)
+
+The main URL: http://www.ebi.ac.uk/xembl/
+
+Overview in one sentence:
+   XEMBL is all about providing EMBL Nucleotide Sequence data in a
+variety of formats - primarily the XML formats.
+
+Available formats (January 2002):
+   BSML (an XML standard from Labbook)
+      DTD available as http://www.labbook.com/products/xmlbsml.asp
+   AGAVE (an XML standard from DoubleTwist)
+      XML schema availabe at http://www.agavexml.org/schema/v3_0/agave.xsd
+
+
+Access methods (January 2002):
+==============================
+
+   Direct HTTP access
+   ------------------
+   http://www.ebi.ac.uk/cgi-bin/xembl/XEMBL.pl?parameters
+where parameters are:
+
+   id        accession number     <required>
+   format    XML result format    Bsml or sciobj
+   mode      output content-type  xml, raw, or bsml
+
+   WebService/SOAP access
+   ----------------------
+
+   The service is described using WSDL. The full description is at
+http://www.ebi.ac.uk/xembl/XEMBL.wsdl. I am going to explain here some
+details.
+
+   The method to call ("message"):
+      getNucSeq
+         parameters ("parts"): format ('Bsml' or 'sciobj')
+                               ids    (space delimited acc. numbers)
+         returns: string in the format given as 'format'

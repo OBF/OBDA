@@ -1,0 +1,179 @@
+
+BioCORBA Specification
+
+The BioCORBA 0.3 specification is a combination of earlier BioCORBA
+standards and the OMG LSR proposal Biological Sequence ANalysis
+Entities (BSANE).  The proposal was revised August 2001 to incorporate
+features from both projects and converge on a workable set of objects
+and functionality based on the current and planned coverage by the
+Bio{*} Language projects.
+
+[FIXME a brief desription of CORBA, IIOP, and IORs]
+
+The primary entities of the BioCORBA specification include essential
+objects in bioinformatics.
+
+Sequences - Supported through a hierarchy which provide additional
+            sequence functionality.
+
+  AnonymousSequence is essentially a representation of residues.
+
+    interface AnonymousSequence : Removable {
+
+      unsigned long get_length();
+
+      SeqTypeDef get_type();
+
+      boolean is_circular();
+
+      string seq() raises ( RequestTooLarge ) ;
+
+      string sub_seq ( in unsigned long start, in unsigned long end  )
+        raises (OutOfBounds, RequestTooLarge);
+    };
+
+ BioSequence inherits from AnonymousSequence and has the additonal
+ functionality of an alphabet and can be narrowed back to an AnonymousSequence.
+
+ interface BioSequence :  AnonymousSequence,
+      Identifiable, AnnotatableSequence  {
+
+      AnonymousSequence get_anonymous_sequence() ;
+
+      Alphabet get_alphabet() ; //REMOVED: raises ( DoesNotExist );
+    };
+
+ Additionally BioSequences are Annotatable so they have the ability
+ to be queried for their attatched features.
+
+ interface AnnotatableSequence : Annotatable {
+
+      SeqFeatureCollection get_seq_features();
+    };
+
+ 
+ NucleotideSequence inherits from BioSequence and has DNA/RNA
+ specific functionality including reverse complementation and
+ translation to protein.
+
+ interface NucleotideSequence : BioSequence {
+
+      string reverse_complement ();
+      string reverse_complement_interval ( in seqcore::SeqFeatureLocation 
+					   the_region )
+	raises (OutOfBounds);
+      string translate_seq ( in short reading_frame,
+			     out Types::ULongSeq stop_locations
+			     )			
+	raises (seqcore::ReadingFrameInvalid);
+      string translate_seq_region (
+				   in seqcore::SeqFeatureLocation seq_region,
+				   out Types::ULongSeq stop_locations
+				   )			
+	raises (OutOfBounds, seqcore::SeqFeatureLocationInvalid);
+    };
+
+ 
+Sequence Features - Supported through the SeqFeature interface with
+		    the helper interfaces SeqFeaturePosition,
+		    SeqLocation, SeqFeatureLocation interfaces.
+
+  The SequenceFeature interface is comprised of methods to get the
+  numeric representation of generic start and end of a Feature's
+  location (summarized in the case of fuzzy and split locations) as
+  well as a list of locations that the Feature has to handle the case
+  There is also a method to retrieve the underlying sequence for
+  the feature when that is know.
+ 
+  interface SeqFeature  : Annotation , Annotatable {
+
+      unsigned long get_start();            
+    
+      unsigned long get_end();              
+    
+      SeqFeatureLocationList get_locations() ;
+    	    
+      AnonymousSequence get_owner_sequence() raises(DoesNotExist )  ;
+
+  };
+
+  The locations that describe a SeqFeature are wrapped inside a
+  SeqFeatureLocation struct which handles a location with multiple
+  positions (sub_locations) and the relationship of these sub
+  locations (possible values are none, join, order).  Additionally the
+  location information for this location (when no sub locations exist)
+  are encapsulated in the seq_location data field.
+
+  struct SeqFeatureLocation  {
+      SeqLocation seq_location;
+
+      SeqFeatureLocOpDef region_operator;
+
+      sequence <SeqLocation> sub_seq_locations;
+      
+      Identifier id;
+  };
+
+  The SeqLocation is represented by the data fields start, end, and
+  strand.  The SeqFeaturePosition is abstracted to a
+  SeqFeaturePosition struct in order to represent locations points
+  that are not strictly numeric.
+
+  struct SeqLocation {
+
+    SeqFeaturePosition start;
+
+    SeqFeaturePosition end;
+
+    StrandTypeDef strand;          
+
+  };
+
+  The SeqFeaturePosition struct is the final object which holds the
+  position data for a sequence feature location point.  The values
+  include a numeric position (like 10) and an extension (to handle
+  10.13 position would be 10 and extension would be 3) and fuzzy value
+  can be encoded as the 5 fuzzy types ( EXACT, WITHIN (.), BETWEEN (^),
+  BEFORE (<), AFTER (>)).
+
+   struct SeqFeaturePosition {
+
+      unsigned long position;
+
+      unsigned long extension;
+
+      FuzzyTypeDef fuzzy;
+
+  };
+
+BioSequenceIdentifierResolver - This interface contains the method
+resolve() which permits retrieval of a single sequence.  
+
+ 
+    interface BioSequenceIdentifierResolver { 
+      
+      seqcore::BioSequence resolve( in Identifier id ) 
+	raises ( IdentifierDoesNotExist, IdentifierNotResolvable, IdentifierNotUnique); 
+      
+    };
+    
+BioSequenceCollection - this interface permits retrieval of all the
+sequences in a given collection (which may be an entire database or just a
+subset of a database).
+    
+    interface BioSequenceCollection : 
+      BioSequenceIdentifierResolver, Identifiable, Annotatable  { 
+      
+      seqcore::BioSequenceList  get_seqs( in unsigned long how_many, 
+						out Iterator the_rest);
+            
+    };
+
+-------
+
+Server discovery for BioCORBA servers and the locations of their IOR
+files will be facilitated through the BioRegistry/MOBY system.
+BioSequenceCollections for specific databases (SwissProt, GenBank,
+EMBL) and will be registered through the service and will contain
+descriptions of the types of sequences (nucleotides, proteins,
+structures) and references to the IOR.
