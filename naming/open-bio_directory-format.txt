@@ -1,0 +1,49 @@
+OBDA URN DIRECTORY XML FILE FORMAT, VERSION 0.1
+-----------------------------------------------
+
+This is a document that specifies how to store OBF URNs in an XML formatted
+file so that all projects can retrieve the URNs along with any meta-data
+associated with them.
+
+This does not describe the form of a legal OBF URN, or any mechanism for
+programatically resloving or validating a URN.
+
+
+JUSTIFICATION
+-------------
+
+To share URNs between all OBF projects and beyond, it is necisary to publish
+the URNs in a way that allows them to be manipulated in a variety of languages
+on a number of platforms. File-system based approaches have proven to be
+brittle to the peculiarites of different file systems directory seperators and
+escape characters. XML is widely supported, and is platform neutral.
+
+
+THE DIRECTORY ELEMENT
+---------------------
+
+Every directory file starts with a <directory> element. This contains one child
+element for each urn being declared. It can have zero or more urn children.
+
+
+THE URN ELEMENT
+---------------
+
+Every URN is defined by a <urn> element. This has an attribute giving the full
+name of the URN as a string. The child elements provide meta-data for the URN,
+and the description child is mandatory.
+
+
+THE DESCRIPTION ELEMENT
+-----------------------
+
+Every URN will have exactly one <description> child element that provides
+a human readable description of the URN. In the general case, this will be
+plain text. All whitespace in this element may be significant, and should be
+preserved.
+
+
+TODO
+----
+
+Schema for this simple XML, providing hooks for adding extra meta-data.

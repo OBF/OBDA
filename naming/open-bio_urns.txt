@@ -1,4 +1,4 @@
-OBDA URN FORMATS, VERSION 0.1
+OBDA URN FORMATS, VERSION 0.2
 -----------------------------
 
 This is a document that specifies how to construct uniform resource names (URNs)
@@ -148,10 +148,6 @@ and
 the identifiers 'bar' and 'baz' can be compared to one another, because they are
 both scoped within the namespace 'foo'.
 
-Namespace identifiers starting with a period ('.') are reserved.
-It is not good practice to use any identifier starting
-with a period. In particular, the namespaces .ns and .id are reserved for
-internal use for documentation.
 
 STRUCTURE OF OBDA URN COMPONENT IDENTIFIERS
 -------------------------------------------
@@ -205,53 +201,32 @@ has the prefix:
   urn:open-bio.org:foo
 
 The presence of the former URN does not imply that the latter one exists or is
-meaningful. It also does not imply that the former does not exist or is not
+meaningful. It also does not imply that it does not exist or is not
 meaningful.
 
-URNs with trailing colons represent a resource that describes all URNs
-starting with that pattern. For example, urn:open-bio.org:foo: should reslove
-to a resource that identifies information about all urns under the foo
-namespace.
 
+DECLARING AND DOCUMENTING IDENTIFIERS
+-------------------------------------
 
-DOCUMENTING IDENTIFIERS
------------------------
+All documenting information should be as widely readable as possible.
+As such, the use of plain text or xml formats is strongly reccomended.
+The details of the method for persisting a registry is beyond the scope of
+this document, but one such method is described in the file
+open-bio_directory.txt in the directory naming of the module obda-spec in the
+CVS repository located at pub.open-bio.org:/home/repository/obf-common.
 
-All files described in this section should be as widely readable as possible.
-As such, the use of plain text formats is required.
-Binary or proprietary formats, such as word documents, RDF and PDF are
-explicitly disallowed.
+Human readable descriptions of each OBDA URN and each namespace should be
+deposited in the apropreate obda namespace repository.
 
-As it is decided that some OBDA URN namespace is required, a document named
-after the URN and suffixed with ':.ns' should be deposited in the directory
-naming/namespaces in the CVS module obda-spec in the CVS repository located at
-pub.open-bio.org:/home/repository/obf-common. This file should contain a
-human readable description of what the namespace is for. If the namespace
-is related to any other namespace defined either by the OBDA, or by any other
-organsisation, this may be described. It is not intended that this document
-be machine parseable. Any application that attempts to discover information
-about identifiers from this file is performing an unsupported opperation.
+When an OBDA URN is documented, it is strongly recomended that the
+namespace that contains the URN is also documented.
 
-When an OBDA URN ns document is created, it is strongly sudgested that the
-ns document for it's scoping namespace is created as well.
-
-As it is decided that some OBDA URN is required, a document named after the
-URN and suffixed with ':.id' should be deposited in the directory
-naming/namespaces in the CVS module obda-spec in the cvs repository located at
-pub.open-bio.org:/home/repository/obf-common. This file should contain a
-human readable description of what the URN identifies. If the identifier is
-related to any other identifiers, or is of a type that has a URN, this may
-be described. It is not intended that this document be machine parseable. Any
-application to discover information about identifiers from this file is
-performing an unsupported opperation.
-
-When an OBDA URN id document is created, it is strongly sudgested that a
-corresponding ns entry be added for it's immediate namespace.
-
-The proceeding paragraphs are things that should happen. If the files are not
-present, this does not invalidate the use of the URN as an OBDA URN, but it
-does reduce the associated benefit as it is no longer possible for a user to
-find out what the URN names.
+Minimally, every URN declared should be accompanied by a human readable
+description. This is not intended to be machine parseable, and any software
+that relies upon parsing these descriptions is unsupported. A particular URN
+may optionaly have further meta-data associated with it, such as relationships
+to other URNs. The details of this are not defined by this document, and may
+be specific to the implementation of the obda namespace repository.
 
 
 TYPE IDENTIFIERS AND NAMESPACES

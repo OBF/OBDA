@@ -1,0 +1,30 @@
+OBDA URN REGISTRATION AND DOCUMENTATION, VERSION 0.1
+----------------------------------------------------
+
+This is a document that specifies a standard way for registering OBDA URNs.
+
+JUSTIFICATION
+-------------
+
+There needs to be agreement about the stoorage of 'cannonical' URNs and their
+meta-data, including descriptions. There are multiple ways to achieve this,
+which can be implented independantly of the details of the syntax or semantics
+of the URNs.
+
+THE DIRECTORIES FILES
+---------------------
+
+A directory naming/directories should be populated with files containing
+collections of URNs. These should be in the format described by
+naming/open-bio_directory-format.txt and there should be one file for each
+logical grouping of URNs.
+
+The complete set of OBDA URNs is found by loading all URNs from all files in
+the directories folder.
+
+There must never be any duplicate entries.
+
+AUTHORS
+-------
+
+Matthew Pocock (initial draft)
