@@ -399,14 +399,11 @@ There is no other data in this file.
 At present there are only two entries in the config database:
 
    "primary_namespace" - contains the primary namespace name
+
    "secondary_namespaces" - contains the tab separated list of
-      seconary namespaces
-
-
-
-
-At present the only configuration is the name used for the primary
-identifier namespace.  The name of this parameter is 'namespace'.
+      secondary namespaces.  If there are no secondary namespaces
+      then this entry exists but contains the empty string as the
+      value.
 
 4) The "fileids" normalization table stored in the database named
 "fileids".  The key is the fileid and the value is in the following format:
@@ -444,7 +441,7 @@ lot of space and the administrator may want to compress the files.
 Reading from a compressed file is most easily done by using an
 external program to generate an uncompressed output stream then
 reading text up to the record beginning.  This is slower than seeking.
-(NOTE: implementations are encourage to use local library support for
+(NOTE: implementations are encouraged to use local library support for
 a compression format, which may provide faster access to bytes in a
 compressed file.)
 
