@@ -1,5 +1,8 @@
-$Id: lsid_for_dbformats.txt,v 1.1 2003/02/18 04:26:44 lstein Exp $
+$Id: lsid_for_dbformats.txt,v 1.2 2003/04/07 20:56:21 mrp Exp $
 $Version$
+
+NOTE: This specification has been deprecated. See the naming specification at
+naming/open-bio_urns.txt for a repalcement specification.
 
 DATABASE FORMATS, VERSION 1.00
 ------------------------------

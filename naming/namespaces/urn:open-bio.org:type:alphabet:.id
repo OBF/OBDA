@@ -1,0 +1,8 @@
+A biological sequence alphabet. Biological sequences are often represented as
+strings of characters. However, in differnt circumstances, the same characters
+can represent different things. For example, in DNA, the 't' character
+represents tyrosine. In Protein, this same character represents tryptophan.
+
+Associating alphabets with these sequences disambiguates their interpretation.
+Alphabets do not define a mapping to or from strings, but should be used
+wherever the type of the content of a sequence needs to be stated.

@@ -1,0 +1,5 @@
+The namespace for URNs that identify data types. It is expected that the types
+that are given IDs will be very general in nature, such as Sequence and
+File Format. All types are of type urn:open-bio.org:type:type. Any URN in the
+type namespace that is not of this type is not conforming to the OBDA
+specification for this namespace.

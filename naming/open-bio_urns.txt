@@ -1,0 +1,336 @@
+OBDA URN FORMATS, VERSION 0.1
+-----------------------------
+
+This is a document that specifies how to construct uniform resource names (URNs)
+for common concepts and entities used within the OBDA and other OBF projects.
+
+A list of the names of specific concepts or entities will be provided in a
+seperate document.
+
+Any process by which a URN may be resolved to either some
+other URI, or to a concrete data item (such as an object or a file) is outside
+the scope of this document.
+
+Identifiers for entities such as embl sequence records are addressed by the
+LSID specification, and therefore fall outside the scope of this document.
+
+
+JUSTIFICATION
+-------------
+
+All of the OBDA and OBF projects shair a large number of concepts with
+one-another. These include things like the DNA alphabet, the Embl file format
+and the BLAST application. There are also other entities that are represented
+by different programatic types in each case, such as Sequence, Feature and
+Sequence Database.
+
+Within a single project, it is often convenient to identify these concepts using
+some string as an identifier. For example, the DNA alphabet in BioJava can be
+resolved by the AlphabetManager class from the string literal "DNA".
+
+Between projects, there is a need to communicate shaired concepts, regardless
+of the fact that different projects may represent these in different ways. For
+example, each project has parsers for the Embl file format. It would be
+beneficial if one project could persist an identifier that flags a resource as
+being in the Embl format, and another project could understand this.
+Applications such as flat-file indexing would be enhanced by this capability.
+
+The main purpose of this documentation is to define some rules for constructing
+URNs that can be shaired within the OBDA and between open-bio projects while
+minimizing the possibilty of ambiguity or namespace clashes.
+
+
+WHAT WE DO AND DON'T EXPECT TO BE NAMING
+----------------------------------------
+
+The OBDA URNs are expected to be used to identify concepts and entities that
+can potentialy be shaired between multiple open-bio projects. We would prefer
+the logcal owners of the concepts to scope the URNs within their own namespaces,
+but in the cases where this is either not yet possible, or there is no clear
+owner, we should define URNs ourselves. If a 3rd party does provide a URN for
+a concept, it is implicitly expected by this specification, that that URN would
+be used, and that no OBDA URN would be generated.
+
+
+RELATIONSHIPS BETWEEN URNS ARE NOT MODELLED BY THIS SPECIFICATION
+-----------------------------------------------------------------
+
+No attept in this document is made to define relationships between URNs. For
+example, if there was a URN for the concept of a biological Alphabet and there
+was a URN for the alphabet DNA, this specification will not address the
+question of any mechanism that would allow the DNA URN to be used to discover
+that it represents a resource of a type compattible with the Alphabet URN.
+It is expected that external documents, such as RDF, or external naming and
+directory technologies, such as LDAP can be adapted to perform this
+functionality.
+
+
+THIS DOCUMENT DOES NOT SPECIFY HOW TO  DECIDE ON URNS OR URN NAMESPACES
+-----------------------------------------------------------------------
+
+OBF URNs are for the benefit of the complete OBF community. As such, it is
+expected that the community as a whole, or some subsection thereof will decide
+what entities need URNs, and how to structure those URNs within the guidelines
+described in this document. It is not within the scope of this document to
+describe this process.
+
+
+CASE AND CHARACTER SET ISSUES
+-----------------------------
+
+This specification assumes that two OBF URNs can be compared in a
+case-insensetive manner. It also assumes that polite handeling of these URNs
+will maintain case. For example, if an application recieves a URN in all lower-
+case, it would be inpolite to print the same URN out, or otherwise expose it
+in any other combination of cases.
+
+This specification says nothing about how to treat different character sets.
+At this time, there is no guidelines about how to represent URNs with exotic
+characters such as Chinese or Klingon. In these cases, if they arrise, we
+should defer to the guidelines in the URN specification.
+
+
+PREFIXES FOR OBDA URNS
+----------------------
+
+All OBDA URNs should be prefixed with the litteral string:
+
+  urn:open-bio.org
+
+[open questions: do we need to register this URN space? Do we need to register
+to comply with the urn rules or to ensure that noby else registers the space?
+Is it OK to register/use the space associated with urn:obda or urn:obda.org
+despite the fact that www.obda.org is owned by a different organisation?]
+
+
+STRUCTURE OF OBDA URNS
+----------------------
+
+The prefix should be seperated from the suffix with a colon (':'). The suffix
+can be treated as an opaque string. It is recomended, however, that the
+suffix be composed from one or more identifiers seperated by a colon.
+It is strongly reccomended that colon characters not be used within identifiers.
+If it is necisary to contain this character, it should be escaped according to
+the normal URL escaping rules.
+
+The left-most identifier is the most significant. For example, the URN
+
+  urn:open-bio.org:foo:bar:baz
+
+can be considered from left to right to have the identifiers foo, bar and baz.
+The first identifer scopes all following identifiers. For example, the URNs
+
+  urn:open-bio.org:foo:baz
+
+and
+
+  urn:open-bio.org:bar:baz
+
+both contain a seccond componet 'baz'. No assumptions can be made that in these
+two cases, 'baz' has the same meaning. This is because in both cases, 'baz'
+must be considered within the context of being a direct descendant of the
+preceeding identifers - in this case 'foo' and 'bar'.
+
+Identifiers following common identifers can be assumed to be within the same
+namespace and are directly comparable. For example, in the URNs
+
+  urn:open-bio.org:foo:bar
+
+and
+
+  urn:open-bio.org:foo:baz
+
+the identifiers 'bar' and 'baz' can be compared to one another, because they are
+both scoped within the namespace 'foo'.
+
+Namespace identifiers starting with a period ('.') should be considered to be
+potentialy reserved. It is not good practice to use any identifier starting
+with a period. In particular, the namespaces .ns and .id are reserved for
+internal use.
+
+STRUCTURE OF OBDA URN COMPONENT IDENTIFIERS
+-------------------------------------------
+
+The individual componets of an OBDA URN can be treated as opaque strings. It is
+expected that in the case where some internal structure is requred, that the
+'/' character will be used to construct a hieracy of internal identifiers.
+This should be interpreted in the usual manner as a path within some directory
+or tree structure.
+
+If an internal identifier needs to be parameterised with some further
+information, the usual URL syntax of query fragments should be employed as is
+used for CGI scripts. The '?' character should be used to seperate the first
+part of the identifier from the parameterization. Perameters should be encoded
+as name=value pairs, and individual pairs should be seperated by the semi-colon
+(';') character.
+
+The common case of a URN component that encodes version information should be
+represented as an identifer of the following form:
+
+  identifier_string?version=<version_number>
+
+where <version_number> is replaced by the actual version number e.g. 1.7. It is
+assumed that unless specified, the version is unimportant, that is, the URN
+represents an unchanging concept.
+
+[open question: have I got this right - amphersans ('&') are a bad choice and
+I think URLs allow both pluss signs ('+') and semi-colons (';').]
+
+[open question: should we allow the other fragment identifiers - pipe ('|') and
+pound ('#') to be used as well? Their use should follow the normal semantics
+i.e. pipe should locate a fragment of the resource using query parameters and
+pound should locate the entire resource but locate the cursor at the position
+specified by the query. I am not sure that the semantics of this are clear for
+the case of URNs.]
+
+
+IDENTIFIER PREFIXES AS IDENTIFIERS IN THEIR OWN RIGHT
+-----------------------------------------------------
+
+The identifier
+
+  urn:open-bio.org:foo:bar
+
+has the prefix:
+
+  urn:open-bio.org:foo
+
+The presence of the former URN does not imply that the latter one exists or is
+meaningfull. It also does not imply that the former does not exist or is not
+meaningfull.
+
+
+DOCUMENTING IDENTIFIERS
+-----------------------
+
+All files described in this section should be as widely readable as possible.
+As such, the use of plain text formats is required.
+Binary or proprietary formats, such as word documents, RDF and PDF are
+explicitly disallowed.
+
+As it is decided that some OBDA URN namespace is required, a document named
+after the URN and suffixed with ':.ns' should be deposited in the directory
+naming/namespaces in the CVS module obda-spec in the CVS repository located at
+pub.open-bio.org:/home/repository/obf-common. This file should contain a
+human readable description of what the namespace is for. If the namespace
+is related to any other namespace defined either by the OBDA, or by any other
+organsisation, this may be described. It is not intended that this document
+be machine parseable. Any application that attempts to discover information
+about identifiers from this file is performing an unsupported opperation.
+
+When an OBDA URN ns document is created, it is strongly sudgested that the
+ns document for it's scoping namespace is created as well.
+
+As it is decided that some OBDA URN is required, a document named after the
+URN and suffixed with ':.id' should be deposited in the directory
+naming/namespaces in the CVS module obda-spec in the cvs repository located at
+pub.open-bio.org:/home/repository/obf-common. This file should contain a
+human readable description of what the URN identifies. If the identifier is
+related to any other identifiers, or is of a type that has a URN, this may
+be described. It is not intended that this document be machine parseable. Any
+application to discover information about identifiers from this file is
+performing an unsupported opperation.
+
+When an OBDA URN id document is created, it is strongly sudgested that a
+corresponding ns entry be added for it's emediate namespace.
+
+The proceeding paragraphs are things that should happen. If the files are not
+present, this does not invalidate the use of the URN as an OBDA URN, but it
+does reduce the associated benefit as it is no longer possible for a developer
+to find out how the URN should be used.
+
+
+TYPE IDENTIFIERS AND NAMESPACES
+-------------------------------
+
+The namespace under urn:open-bio.org:type is reserved for URNs identifying
+common types for entities. It is expected that this will become populated with
+a range of identifiers for each type that is shared between projects. As a
+convention, it is convenient to scope identifiers for instances of a type by
+the type identifier. For example, if a type is defined as:
+
+  urn:open-bio.org:type:alphabet
+
+it may be convenient to store identfiers for individual alphabets under the
+namespace:
+
+  urn:open-bio.org:alphabet
+
+This is not a formal requirement of the specification. This convention should
+in no way be relied upon by code that acts upon OBDA URNs. It is meerly
+provided as a way for our URN space to become self-organising.
+
+
+SOME EXAMPLE OBF URNS
+---------------------
+
+Four common file formats
+
+  urn:open-bio.org:format:embl
+  urn:open-bio.org:format:genbank
+  urn:open-bio.org:format:swissprot
+  urn:open-bio.org:format:fasta
+
+Three common alphabets
+
+  urn:open-bio.org:alphabet:dna
+  urn:open-bio.org:alphabet:rna
+  urn:open-bio.org:alphabet:protein
+
+Fasta files with two different alphabets
+  urn:open-bio.org:format:fasta?alphabet=urn:open-bio.org:alphabet:dna
+  urn:open-bio.org:format:fasta?alphabet=urn:open-bio.org:alpahbet:protein
+
+A versioned identifier for the swiss-prot format that corresponds to a
+particular swiss-prot release
+
+  urn:open-bio.org:format:swissprot?version=35
+
+If we wished to expose a name for the accession lines in swissprot in version
+35, a reasonable way to express that would be
+
+  urn:open-bio.org:format:swissprot?version=35:AC
+
+The shaired concepts of sequence, feature and database
+
+  urn:open-bio.org:type:sequence
+  urn:open-bio.org:type:feature
+  urn:open-bio.org:type:database
+
+The shaired concept of the type associated with the identifier of a sequence
+
+  urn:open-bio.org:type:sequence:identifier
+
+The not-so-shaired concept of the type associated with a biojava sequence
+
+  urn:open-bio.org:type:biojava/sequence
+
+And of the identifier associated with a biojava sequence
+
+  urn:open-bio.org:type:biojava/sequence:identifier
+
+
+CAUTIONARY REMARKS
+------------------
+
+The above examples are to describe different possible uses of the OBDA URN
+specification in generating identifiers for shaired concepts. It is not meant
+to endourse any of those identifiers as being in use.
+
+The questoin of wether to make a compound identifier, or to add a new namespace
+is a value judgement. In some cases, it is clear cut because the entity being
+named is clearly only valid within some other context. In this case, the
+context within which is valid should appear before it in the URN. In other
+cases, such as for the biojava sequence type, it is more consistent to treat
+the extra information as part of a structured identifier.
+
+Although there are clearly inhertiance and partative relationships between the
+example URNs above, we repeat that this document does not attempt to define a
+formal way of specifying these relationships. This is wholely outside the
+scope of this document.
+
+
+AUTHORS
+-------
+
+Matthew Pocock (initial draft)

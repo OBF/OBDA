@@ -1,0 +1,4 @@
+This is the root namespace for all OBDA URNs. All OBDA URNs should be prefixed
+by urn:open-bio.org as described in the file naming/open-bio_urns.txt in the
+module obda-specs in the cvs repository located at
+pub.open-bio.org:/home/repository/obf-common.
