@@ -1,0 +1,7 @@
+A file format. Many file formats are used in bioinformatics. Entities of this
+type identify a format. The format can be used to choose how to treat a file.
+The format is not expected to be resolvable to a formal deffinition of the
+file structure using OBDA-supplied functionality. Different applications may
+chose to process a stream with the same format URN in different ways. This
+type of URN is purely there to identify the format of the stream, not the
+manner in which it should be processed.
