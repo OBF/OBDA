@@ -1,0 +1,29 @@
+$Id: lsid_for_dbformats.txt,v 1.1 2003/02/18 04:26:44 lstein Exp $
+$Version$
+
+DATABASE FORMATS, VERSION 1.00
+------------------------------
+
+This document describes a standard way of naming the flat file formats
+used in bioinformatics applications. It is a special case of the LSID
+syntax described in:
+
+  http://www.i3c.org/workgroups/technical_architecture/resources/lsid/docs/LSIDSyntax9-20-02.htm
+
+All flat file formats are identified using this format:
+
+URN:LSID:open-bio.org:<format>/<alphabet>
+
+where <format> is one of:
+      embl
+      genbank
+      fasta
+      swiss
+      pdb
+
+and <alphabet> is one of:
+    dna
+    rna
+    protein
+
+The optional LSID version field is not used.
