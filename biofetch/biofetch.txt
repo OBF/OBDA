@@ -1,0 +1,196 @@
+# $Id: biofetch.txt,v 1.1 2002/02/25 09:30:35 heikki Exp $
+
+BioFetch - Light weight universal translator
+============================================
+Spec version 0.6
+
+
+This is a document for a standard Web interface to retrieve entries
+from biological databases using unique identifiers.
+
+The capabilities of the program/server are not covered. The programs
+calling BioFetch CGI are assumed to get details (e.g what databases
+are available, what formats are supported, how many entries can be
+retrieved at one go) from a separate registry.
+
+JUSTIFICATION
+
+Biological databases are large and there are several common ways of
+indexing (SRS, EMBL indexes, RDB, Berkeley DB) them for random
+access. While various approaches to unify sequence access (CORBA,
+SOAP, NOVELLA). All bio* projects implement parsing of sequence
+database entry parsing in their original format. Likewise all relevant
+programming languages have standard ways of accessing documents over
+the Web. Taken together, these two facts make it easy to build a
+portable system of retrieving any entries transparently from up to
+date databases.
+
+The main purpose of this document is to define the parameters to a
+(CGI) program and its response. The internal details of the program
+are dependent on implementation. Also, the indexing system used to
+serve the entries, is not specified.
+
+
+PROGRAM BEHAVIOUR
+
+In addition to GET method the BioFetch should be able to recieve its
+parameters from POST method, too.
+
+The BioFetch program should return entries only if they match the ID
+string and other attributes completely. If any of the IDs submitted
+does not find the match in the query database, an error reporting the
+cause should be thrown and no entries returned.
+
+Apart from content type definition, the returned string should not
+contain any characters which are not part of the entry format.
+
+Sequences in EMBL/GenBank/DDBJ public nucleotide sequence databases
+share three identifiers: ID, accession and accession.version. If a
+specific version is requested, only that should be returned.
+
+The program is guaranteed to return only one, latest matching version
+of the entry for each ID. This is important in cases where the
+database and its update database are indexed separately (e.g. EMBL and
+EMBLNEW).
+
+The next section of the document deals with the URL and parameter
+structure for the BioFetch program.
+
+
+URL
+
+This interface does not specify what happens when biofetch is called
+in interactive context. The implementations can return the entries
+decorated with HTML tags and hypertext links.
+
+A URL for biofetch consists of four sections:
+
+			e.g.
+1. protocol		http://
+2. host			www.ebi.ac.uk
+3. path to program	/cgi-bin/dbfetch
+4. query string		?style=raw;format=embl;db=embl;id=J00231
+
+
+QUERY STRING
+
+The query string options are separated from the base URL (protocol +
+host + path) by a question mark (?) and from each other by a semicolon
+';' (or by ampersand '&'). See CGI GET documents at
+http://www.w3.org/CGI/). The order of options is not critical. It is
+recommended to leave the ID to be the last item.
+
+Input for options should be case insensitive.
+
+
+option: db
+
+  Option  : db
+  Descr   : database name
+  Type    : required
+  Usage   : db=embl | db=genbank | db=swall
+  Arg     : string 
+    
+
+option: style
+
+  Option  : style
+  Descr   : +/- HTML tags
+  Type    : required
+  Usage   : style=raw | db=html
+  Arg     : enum (raw|html)
+
+In non-interactive context, always give "style=raw". This uses
+"Content-Type: text/plain". If other content types are needed (XML),
+this part of the spesifications can be extended to accommodate them.
+
+
+option: format
+
+  Option  : format
+  Descr   : format of the database entries returned
+  Type    : optional
+  Usage   : format=embl | format=fasta
+  Arg     : enum
+
+Format defaults to the distribution format of the database (embl for
+EMBL database). If some other supported format is needed this option
+is needed (E.g. formats for EMBL: fasta, bsml, agave).
+
+
+option: id
+
+  Option  : id
+  Descr   : unique database identifier(s)
+  Type    : required
+  Usage   : db=J00231 | id=J00231+BUM
+  Arg     : string 
+
+The ID option should be able to process all UIDS in a database. It
+should not be necessary to know if the UID is an ID, accession number
+or accession.version.
+
+The number of entry UIDs allowed is implementation specific. If the
+limit is exceeded, the the program reports an error. The UIDs should
+be separated by spaces (use '+' in a GET method string).
+
+
+ERROR MESSAGES
+
+The following standardized one line messages should be printed out in
+case of an error.
+
+ERROR 1 Unknown database [$db].
+ERROR 2 Unknown style [$style].
+ERROR 3 Format [$format] not known for database [$db].
+ERROR 4 ID [$id] not found in database [$db].
+ERROR 5 Too many IDs [$count]. Max [$MAXIDS] allowed.
+
+
+IMPLEMENTATIONS
+
+The first implementation of the BioFetch server is dbfetch, a perl
+CGI program. It is distributed as part of the bioperl package in the
+directory 'scripts/DB'
+<http://cvs.bioperl.org/cgi-bin/viewcvs/viewcvs.cgi/bioperl-live/\
+scripts/DB/dbfetch?cvsroot=bioperl>. 
+
+The URL to dbfetch running at EBI is:
+
+    http://www.ebi.ac.uk/cgi-bin/dbfetch
+
+
+This server is used in bioperl by specific Bio::DB::BioFetchmodules as
+well as more generic Bio::DB::EMBL, Bio::DB::Swissprot and
+Bio::DB::RefSeq modules. 
+
+An other implementation in progress is
+being written by Toshiaki Katayma <k@bioruby.org> using bioruby. The
+URL is:
+
+    http://bioruby.org/cgi-bin/biofetch.rb
+
+
+
+
+
+
+
+v. 0.1  Heikki Lehvaslaiho	Sun Jan 27 00:03:08 GMT 2002
+
+v. 0.2  Heikki Lehvaslaiho	Sun Jan 27 19:11:29 GMT 2002
+         			Sun Jan 27 12:11:29 MST 2002
+
+v. 0.3  Heikki Lehvaslaiho	Sun Jan 27 21:05:51 GMT 2002
+	- standard error messages
+
+v. 0.4  Heikki Lehvaslaiho	Mon Jan 28 16:16:11 GMT 2002
+        - minor typos fixed
+
+v. 0.5  Heikki Lehvaslaiho	Mon Feb  4 09:51:24 GMT 2002
+        - typo ebi.ebi.ac.uk -> www.ebi.ac.uk
+        - added Katayama's biofetch.rb server
+
+v. 0.6  Heikki Lehvaslaiho	Mon Feb  4 13:43:42 GMT 2002
+        - changed Katayama's email address
+        - removed a duplicated error message
