@@ -18,8 +18,8 @@ LSID specification, and therefore fall outside the scope of this document.
 JUSTIFICATION
 -------------
 
-All of the OBDA and OBF projects shair a large number of concepts with
-one-another. These include things like the DNA alphabet, the Embl file format
+All of the OBDA and OBF projects share a large number of concepts with
+one another. These include things like the DNA alphabet, the Embl file format
 and the BLAST application. There are also other entities that are represented
 by different programatic types in each case, such as Sequence, Feature and
 Sequence Database.
@@ -28,15 +28,15 @@ Within a single project, it is often convenient to identify these concepts using
 some string as an identifier. For example, the DNA alphabet in BioJava can be
 resolved by the AlphabetManager class from the string literal "DNA".
 
-Between projects, there is a need to communicate shaired concepts, regardless
+Between projects, there is a need to communicate shared concepts, regardless
 of the fact that different projects may represent these in different ways. For
 example, each project has parsers for the Embl file format. It would be
-beneficial if one project could persist an identifier that flags a resource as
+beneficial if one project could store a persistent identifier that flags a resource as
 being in the Embl format, and another project could understand this.
 Applications such as flat-file indexing would be enhanced by this capability.
 
 The main purpose of this documentation is to define some rules for constructing
-URNs that can be shaired within the OBDA and between open-bio projects while
+URNs that can be shared within the OBDA and between open-bio projects while
 minimizing the possibilty of ambiguity or namespace clashes.
 
 
@@ -44,12 +44,12 @@ WHAT WE DO AND DON'T EXPECT TO BE NAMING
 ----------------------------------------
 
 The OBDA URNs are expected to be used to identify concepts and entities that
-can potentialy be shaired between multiple open-bio projects. We would prefer
+can potentialy be shared between multiple open-bio projects. We would prefer
 the logcal owners of the concepts to scope the URNs within their own namespaces,
 but in the cases where this is either not yet possible, or there is no clear
-owner, we should define URNs ourselves. If a 3rd party does provide a URN for
-a concept, it is implicitly expected by this specification, that that URN would
-be used, and that no OBDA URN would be generated.
+owner, we should define URNs ourselves. If a relevent third party does provide a
+URN for a concept, that URN should be used, and no open-bio URN will be
+generated.
 
 
 RELATIONSHIPS BETWEEN URNS ARE NOT MODELLED BY THIS SPECIFICATION
@@ -79,14 +79,14 @@ CASE AND CHARACTER SET ISSUES
 -----------------------------
 
 This specification assumes that two OBF URNs can be compared in a
-case-insensetive manner. It also assumes that polite handeling of these URNs
-will maintain case. For example, if an application recieves a URN in all lower-
-case, it would be inpolite to print the same URN out, or otherwise expose it
+case-insensitive manner. It also assumes that polite handling of these URNs
+will maintain case. For example, if an application receives a URN in all lower-
+case, it would be impolite to print the same URN out, or otherwise expose it
 in any other combination of cases.
 
 This specification says nothing about how to treat different character sets.
 At this time, there is no guidelines about how to represent URNs with exotic
-characters such as Chinese or Klingon. In these cases, if they arrise, we
+characters such as Chinese or Klingon. In these cases, if they arise, we
 should defer to the guidelines in the URN specification.
 
 
@@ -98,7 +98,7 @@ All OBDA URNs should be prefixed with the litteral string:
   urn:open-bio.org
 
 [open questions: do we need to register this URN space? Do we need to register
-to comply with the urn rules or to ensure that noby else registers the space?
+to comply with the urn rules or to ensure that nobody else registers the space?
 Is it OK to register/use the space associated with urn:obda or urn:obda.org
 despite the fact that www.obda.org is owned by a different organisation?]
 
@@ -196,8 +196,8 @@ has the prefix:
   urn:open-bio.org:foo
 
 The presence of the former URN does not imply that the latter one exists or is
-meaningfull. It also does not imply that the former does not exist or is not
-meaningfull.
+meaningful. It also does not imply that the former does not exist or is not
+meaningful.
 
 
 DOCUMENTING IDENTIFIERS
@@ -232,7 +232,7 @@ application to discover information about identifiers from this file is
 performing an unsupported opperation.
 
 When an OBDA URN id document is created, it is strongly sudgested that a
-corresponding ns entry be added for it's emediate namespace.
+corresponding ns entry be added for it's immediate namespace.
 
 The proceeding paragraphs are things that should happen. If the files are not
 present, this does not invalidate the use of the URN as an OBDA URN, but it
@@ -291,17 +291,17 @@ If we wished to expose a name for the accession lines in swissprot in version
 
   urn:open-bio.org:format:swissprot?version=35:AC
 
-The shaired concepts of sequence, feature and database
+The shared concepts of sequence, feature and database
 
   urn:open-bio.org:type:sequence
   urn:open-bio.org:type:feature
   urn:open-bio.org:type:database
 
-The shaired concept of the type associated with the identifier of a sequence
+The shared concept of the type associated with the identifier of a sequence
 
   urn:open-bio.org:type:sequence:identifier
 
-The not-so-shaired concept of the type associated with a biojava sequence
+The not-so-shared concept of the type associated with a biojava sequence
 
   urn:open-bio.org:type:biojava/sequence
 
@@ -317,14 +317,14 @@ The above examples are to describe different possible uses of the OBDA URN
 specification in generating identifiers for shaired concepts. It is not meant
 to endourse any of those identifiers as being in use.
 
-The questoin of wether to make a compound identifier, or to add a new namespace
+The question of whether to make a compound identifier, or to add a new namespace
 is a value judgement. In some cases, it is clear cut because the entity being
 named is clearly only valid within some other context. In this case, the
 context within which is valid should appear before it in the URN. In other
 cases, such as for the biojava sequence type, it is more consistent to treat
 the extra information as part of a structured identifier.
 
-Although there are clearly inhertiance and partative relationships between the
+Although there are clearly inheritance and partative relationships between the
 example URNs above, we repeat that this document does not attempt to define a
 formal way of specifying these relationships. This is wholely outside the
 scope of this document.
