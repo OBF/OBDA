@@ -189,7 +189,30 @@ is "index\tflat/1\n".  This allows implementations to determine the
 indexing mechanism (eg, flat-file vs. BerkleyDB) automaticall and with
 minimal work, and also allows future expansion.
 
-4) The primary identifier namespace is stored in config.dat under the
+4) The format of the flat files being indexed is stored in config.dat
+under the key named "format".  The format is used to select the
+correct parser for the flat files, and is one of:
+
+	ace
+	bsml
+	embl
+	fasta
+	fastq
+	game
+	gcg
+	genbank
+	phd
+	pir
+	qual
+	raw
+	scf
+	swiss
+
+For example:
+
+    "format" "\t" "embl" "\n"
+
+5) The primary identifier namespace is stored in config.dat under the
 key named 'primary_namespace'.  For example, if the dbname is
 "swissprot" which uses the "ID" as the primary identifier then the
 file "swissprot/config.dat" will contain the following line somewhere
@@ -197,7 +220,7 @@ in the file:
 
  "primary_namespace" "\t" "ID" "\n"
 
-5) The "fileids" normalization table is stored in config.dat using
+6) The "fileids" normalization table is stored in config.dat using
 keys with a prefix of "fileid_" followed by the fileid number
 represented as a text string, so legal keys include "fileid_0",
 "fileid_1", and "fileid_314".  The keys are not zero filled, so
@@ -231,7 +254,7 @@ proper value in this spot.  Users of the index should compare the file
 sizes on the first attempt to access the file and report any
 differences.
 
-6) The list of secondary namespaces is stored in config.dat under the
+7) The list of secondary namespaces is stored in config.dat under the
 key "secondary_namespaces".  Mutiple terms are separated by a tab
 character.  If there are no secondary namespaces then this entry must
 exist but the value is the empty string.
@@ -239,7 +262,7 @@ exist but the value is the empty string.
 NOTE: In theory this data can be reconstructed by analysis of the file
 system, but keeping the list here is simpler.
 
-7) The mapping from primary identifier to location is stored in the
+8) The mapping from primary identifier to location is stored in the
 file "${dbname}/key_${UNIQUE}.key" where ${UNIQUE} is the primary
 identifier namespace.  For example, if the dbname is "swissprot" and
 the primary namespace is named "ID" then the filename is
@@ -299,7 +322,7 @@ For example, for a SWISS-PROT record indexed by the "ID" field the
 0020100K_RAT\t0\t4495     104K_THEPA\t4495\t2816
 
 
-8) The mappings from secondary namepaces to primary key are stored in
+9) The mappings from secondary namepaces to primary key are stored in
 files of the form "${dbname}/id_${NAMESPACE}.index".  For example, if
 there is a namespace called "accession" which maps accession names to
 the primary identifier then there is a file named
